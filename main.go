@@ -112,10 +112,17 @@ func main() {
 
 	// TODO: multiple subscribers.
 
+	// initialise a timeout (if no messages are received in the given time since the last publish.)
+	timeout := time.NewTimer(10 * time.Second)
+	resetSubTimeout := func() {
+		timeout.Reset(time.Duration(*subTimeout) * time.Second)
+	}
+
 	// discarding received messages
 	messageHandler := func(client *mqtt.Client, m mqtt.Message) {
 		if string(m.Payload()) == "hello world" {
 			receivedCh <- 1
+			resetSubTimeout() // reset timeout
 		}
 	}
 
@@ -148,11 +155,8 @@ func main() {
 	// Publish to topics
 	//
 
-	// timeout if no messages are received in the given time since the last publish.
-	timeout := time.NewTimer(time.Duration(*subTimeout) * time.Second)
-	resetSubTimeout := func() {
-		timeout.Reset(time.Duration(*subTimeout) * time.Second)
-	}
+	// set value for timeout
+	timeout = time.NewTimer(time.Duration(*subTimeout) * time.Second)
 
 	go func() {
 		for {
@@ -182,7 +186,6 @@ func main() {
 					errCh <- token.Error()
 				}
 				sentCh <- 1
-				resetSubTimeout() // reset timeout
 				time.Sleep(time.Duration(*pubDelay) * time.Millisecond)
 			}
 		}()
