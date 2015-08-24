@@ -18,7 +18,7 @@ var (
 	numPub      = flag.Int("pub", 1, "Number of concurrent publishers.")
 	numSub      = flag.Int("sub", 1, "Number of concurrent subscribers.")
 	numTop      = flag.Int("topics", 1, "Number of topics per publisher.")
-	numMessages = flag.Int("messages", 10, "Number of messages to be sent out per publisher.")
+	numMessages = flag.Int("messages", 10, "Number of messages per topic to be sent out per publisher.")
 	pubDelay    = flag.Int("delay", 100, "Delay in ms between messages for a single publisher.")
 	subTimeout  = flag.Int("timeout", 5, "Timeout in seconds for the subscriber.")
 	user        = flag.String("userName", "", "Username.")
